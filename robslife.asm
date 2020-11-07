@@ -2,7 +2,7 @@
 ;
 ; My attempt at beating Macro-Life by Toni Baker (10.5 seconds full screen)
 ; and Outlet Life by Paul Hiley (3.5 seconds 2/3 screen)
-; Assembled with zasm
+; Assembled with zasm https://k1.spdns.de/Develop/Projects/zasm/Documentation/
 
 ;
 ; We don't use stack based memory copy/mem clear operations ... yet :-)
@@ -459,23 +459,23 @@ remain2:
 ; ----------------------------------
  ; bit 1 - top row, mid/right
     ld a, d     ; 4
-    or 7        ; 4
+    or 7        ; 7
     ld l, a     ; 4
-    ld c, (hl)  ; 7=19
+    ld c, (hl)  ; 7=22
 ; bit 1 - middle row, mid/right
     ld a, e     ; 4
-    or 5        ; 4
+    or 5        ; 7
     ld l, a     ; 4
     ld a, (hl)  ; 7
     add a, c    ; 4
-    ld c, a     ; 4=27
+    ld c, a     ; 4=30
 ; bit 1 - bottom row, mid/right
     ld a, b     ; 4
-    or 7        ; 4
+    or 7        ; 7
     ld l, a     ; 4
     ld a, (hl) ; 7
-    add a, c    ; 4=23
-                ; 23+27+19 = 69
+    add a, c    ; 4=26
+                ; 22+30+26=78
 
 ; A contains the count of bits
     cp 3
