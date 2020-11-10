@@ -10,7 +10,7 @@
 
     org 55555 ; = $d903, well above the screen copy
 
-; screen at $C000
+; screen copy at $C000, and a 32 byte buffer before that. 
 ; this code above that
 ; plenty of room for basic, or anything else
 
@@ -28,9 +28,10 @@ start:
     ld e, 0    ; start row - unsigned 8 bit
     exx
     push hl
+    exx        ; get register e back
     call main
     pop hl
-    exx
+    exx        ; make sure that's HL'
     ret
 
 main:
@@ -715,7 +716,7 @@ fast_ldir32:
 clear32_aligned4:
     xor a
     ld b, #8             ;set B to zero it will cause 256 repeations of loop
-clear32_loop
+clear32_loop:
     ld (hl), a           ;7 set byte to zero
     inc l                ;4 move to the next byte
     ld (hl), a
@@ -762,7 +763,7 @@ line_byte_count:
     .dw 0
 current_line_indirect_address:
     .dw 0
-current_line_count;
+current_line_count:
     .dw 0
 
     align 256
@@ -805,34 +806,34 @@ bit_count_table:
 ; (Z80 hl load/store is little endian).
  align 2
 line_addresses_back_one:
- defb $bf, &e0                 ; one line above
+ defb $bf, $e0                 ; one line above
 line_addresses:
- defb &c0, &00,   &c1, &00,   &c2, &00,   &c3, &00,   &c4, &00,   &c5, &00,   &c6, &00,   &c7, &00
- defb &c0, &20,   &c1, &20,   &c2, &20,   &c3, &20,   &c4, &20,   &c5, &20,   &c6, &20,   &c7, &20
- defb &c0, &40,   &c1, &40,   &c2, &40,   &c3, &40,   &c4, &40,   &c5, &40,   &c6, &40,   &c7, &40
- defb &c0, &60,   &c1, &60,   &c2, &60,   &c3, &60,   &c4, &60,   &c5, &60,   &c6, &60,   &c7, &60
- defb &c0, &80,   &c1, &80,   &c2, &80,   &c3, &80,   &c4, &80,   &c5, &80,   &c6, &80,   &c7, &80
- defb &c0, &a0,   &c1, &a0,   &c2, &a0,   &c3, &a0,   &c4, &a0,   &c5, &a0,   &c6, &a0,   &c7, &a0
- defb &c0, &c0,   &c1, &c0,   &c2, &c0,   &c3, &c0,   &c4, &c0,   &c5, &c0,   &c6, &c0,   &c7, &c0
- defb &c0, &e0,   &c1, &e0,   &c2, &e0,   &c3, &e0,   &c4, &e0,   &c5, &e0,   &c6, &e0,   &c7, &e0
- defb &c8, &00,   &c9, &00,   &ca, &00,   &cb, &00,   &cc, &00,   &cd, &00,   &ce, &00,   &cf, &00
- defb &c8, &20,   &c9, &20,   &ca, &20,   &cb, &20,   &cc, &20,   &cd, &20,   &ce, &20,   &cf, &20
- defb &c8, &40,   &c9, &40,   &ca, &40,   &cb, &40,   &cc, &40,   &cd, &40,   &ce, &40,   &cf, &40
- defb &c8, &60,   &c9, &60,   &ca, &60,   &cb, &60,   &cc, &60,   &cd, &60,   &ce, &60,   &cf, &60
- defb &c8, &80,   &c9, &80,   &ca, &80,   &cb, &80,   &cc, &80,   &cd, &80,   &ce, &80,   &cf, &80
- defb &c8, &a0,   &c9, &a0,   &ca, &a0,   &cb, &a0,   &cc, &a0,   &cd, &a0,   &ce, &a0,   &cf, &a0
- defb &c8, &c0,   &c9, &c0,   &ca, &c0,   &cb, &c0,   &cc, &c0,   &cd, &c0,   &ce, &c0,   &cf, &c0
- defb &c8, &e0,   &c9, &e0,   &ca, &e0,   &cb, &e0,   &cc, &e0,   &cd, &e0,   &ce, &e0,   &cf, &e0
- defb &d0, &00,   &d1, &00,   &d2, &00,   &d3, &00,   &d4, &00,   &d5, &00,   &d6, &00,   &d7, &00
- defb &d0, &20,   &d1, &20,   &d2, &20,   &d3, &20,   &d4, &20,   &d5, &20,   &d6, &20,   &d7, &20
- defb &d0, &40,   &d1, &40,   &d2, &40,   &d3, &40,   &d4, &40,   &d5, &40,   &d6, &40,   &d7, &40
- defb &d0, &60,   &d1, &60,   &d2, &60,   &d3, &60,   &d4, &60,   &d5, &60,   &d6, &60,   &d7, &60
- defb &d0, &80,   &d1, &80,   &d2, &80,   &d3, &80,   &d4, &80,   &d5, &80,   &d6, &80,   &d7, &80
- defb &d0, &a0,   &d1, &a0,   &d2, &a0,   &d3, &a0,   &d4, &a0,   &d5, &a0,   &d6, &a0,   &d7, &a0
- defb &d0, &c0,   &d1, &c0,   &d2, &c0,   &d3, &c0,   &d4, &c0,   &d5, &c0,   &d6, &c0,   &d7, &c0
- defb &d0, &e0,   &d1, &e0,   &d2, &e0,   &d3, &e0,   &d4, &e0,   &d5, &e0,   &d6, &e0,   &d7, &e0
+ defb $c0, $00,   $c1, $00,   $c2, $00,   $c3, $00,   $c4, $00,   $c5, $00,   $c6, $00,   $c7, $00
+ defb $c0, $20,   $c1, $20,   $c2, $20,   $c3, $20,   $c4, $20,   $c5, $20,   $c6, $20,   $c7, $20
+ defb $c0, $40,   $c1, $40,   $c2, $40,   $c3, $40,   $c4, $40,   $c5, $40,   $c6, $40,   $c7, $40
+ defb $c0, $60,   $c1, $60,   $c2, $60,   $c3, $60,   $c4, $60,   $c5, $60,   $c6, $60,   $c7, $60
+ defb $c0, $80,   $c1, $80,   $c2, $80,   $c3, $80,   $c4, $80,   $c5, $80,   $c6, $80,   $c7, $80
+ defb $c0, $a0,   $c1, $a0,   $c2, $a0,   $c3, $a0,   $c4, $a0,   $c5, $a0,   $c6, $a0,   $c7, $a0
+ defb $c0, $c0,   $c1, $c0,   $c2, $c0,   $c3, $c0,   $c4, $c0,   $c5, $c0,   $c6, $c0,   $c7, $c0
+ defb $c0, $e0,   $c1, $e0,   $c2, $e0,   $c3, $e0,   $c4, $e0,   $c5, $e0,   $c6, $e0,   $c7, $e0
+ defb $c8, $00,   $c9, $00,   $ca, $00,   $cb, $00,   $cc, $00,   $cd, $00,   $ce, $00,   $cf, $00
+ defb $c8, $20,   $c9, $20,   $ca, $20,   $cb, $20,   $cc, $20,   $cd, $20,   $ce, $20,   $cf, $20
+ defb $c8, $40,   $c9, $40,   $ca, $40,   $cb, $40,   $cc, $40,   $cd, $40,   $ce, $40,   $cf, $40
+ defb $c8, $60,   $c9, $60,   $ca, $60,   $cb, $60,   $cc, $60,   $cd, $60,   $ce, $60,   $cf, $60
+ defb $c8, $80,   $c9, $80,   $ca, $80,   $cb, $80,   $cc, $80,   $cd, $80,   $ce, $80,   $cf, $80
+ defb $c8, $a0,   $c9, $a0,   $ca, $a0,   $cb, $a0,   $cc, $a0,   $cd, $a0,   $ce, $a0,   $cf, $a0
+ defb $c8, $c0,   $c9, $c0,   $ca, $c0,   $cb, $c0,   $cc, $c0,   $cd, $c0,   $ce, $c0,   $cf, $c0
+ defb $c8, $e0,   $c9, $e0,   $ca, $e0,   $cb, $e0,   $cc, $e0,   $cd, $e0,   $ce, $e0,   $cf, $e0
+ defb $d0, $00,   $d1, $00,   $d2, $00,   $d3, $00,   $d4, $00,   $d5, $00,   $d6, $00,   $d7, $00
+ defb $d0, $20,   $d1, $20,   $d2, $20,   $d3, $20,   $d4, $20,   $d5, $20,   $d6, $20,   $d7, $20
+ defb $d0, $40,   $d1, $40,   $d2, $40,   $d3, $40,   $d4, $40,   $d5, $40,   $d6, $40,   $d7, $40
+ defb $d0, $60,   $d1, $60,   $d2, $60,   $d3, $60,   $d4, $60,   $d5, $60,   $d6, $60,   $d7, $60
+ defb $d0, $80,   $d1, $80,   $d2, $80,   $d3, $80,   $d4, $80,   $d5, $80,   $d6, $80,   $d7, $80
+ defb $d0, $a0,   $d1, $a0,   $d2, $a0,   $d3, $a0,   $d4, $a0,   $d5, $a0,   $d6, $a0,   $d7, $a0
+ defb $d0, $c0,   $d1, $c0,   $d2, $c0,   $d3, $c0,   $d4, $c0,   $d5, $c0,   $d6, $c0,   $d7, $c0
+ defb $d0, $e0,   $d1, $e0,   $d2, $e0,   $d3, $e0,   $d4, $e0,   $d5, $e0,   $d6, $e0,   $d7, $e0
 ; line below
- defb &d8, &00
+ defb $d8, $00
 
 
 ; END
