@@ -138,16 +138,13 @@ line_loop:
 
 ; get the first byte of each line
     ld a, (bc)      ; 7=37 top row, show be d but put it temporarily in a
-    inc bc
     push bc     ; 11=48
 
     ld b, (hl)      ; 7=55 bottom row = b
-    inc hl      ; 6=61
     push hl     ; 11=72
 
     ld h, a     ; mode to h on its way to d
     ld a, (de)  ; 7=79    ; middLe row = e
-    inc de      ; 6=85
     push de     ; 11=96  ; de short for destination? :-)
 
     ld d, h         ; 4=100 move to top row = d
@@ -584,8 +581,12 @@ remain0:
     jp nz, column_loop
 
 ; end of line
+    pop hl      ; drop useless pointers
+    pop hl
+    pop hl
     ld a, (current_line_count)
     dec a
+    ld (current_line_count), a
     jp nz, line_loop
 
 ; copy back to screen not required - we've been copying
