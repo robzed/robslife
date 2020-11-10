@@ -245,28 +245,9 @@ column_loop:
     ld l, a
     ld a, (hl)
     add a, c
+    ld c, a
 
 ; A contains the count of bits
-    ld a, h
-    ld a, h
-    ld a, h
-    ld a, h
-    ld a, h
-    ld a, h
-    ld a, h
-    ld a, h
-    ld a, h
-    ld a, h
-    or $80
-    or $80
-    or $80
-    or $80
-    or $80
-    or $80
-    or $80
-    or $80
-    or $80
-    or $80
     cp 3
     jr z, alive7    ;In terms of speed jp is faster when a jump occurs (10 T-states) and jr is faster when it doesn't occur.
     cp 2
@@ -285,19 +266,19 @@ remain7:
 ; ----------------------------------
  ; bit 6 - top row, mid/right
     ld a, d
-    or $e0
+    and $e0
     ld l, a
     ld c, (hl)
 ; bit 6 - middle row, mid/right
     ld a, e
-    or $a0
+    and $a0
     ld l, a
     ld a, (hl)
     add a, c
     ld c, a
 ; bit 6 - bottom row, mid/right
     ld a, b
-    or $e0
+    and $e0
     ld l, a
     ld a, (hl)
     add a, c
@@ -312,7 +293,7 @@ remain7:
     and $bf     ; res 6, a
     jp skip6
 alive6:
-    and $40     ; set 6, a
+    or $40     ; set 6, a
 skip6:
     ex af, af'
 remain6:
@@ -320,19 +301,19 @@ remain6:
 ; ----------------------------------
  ; bit 5 - top row, mid/right
     ld a, d
-    or $70
+    and $70
     ld l, a
     ld c, (hl)
 ; bit 5 - middle row, mid/right
     ld a, e
-    or $50
+    and $50
     ld l, a
     ld a, (hl)
     add a, c
     ld c, a
 ; bit 5 - bottom row, mid/right
     ld a, b
-    or $70
+    and $70
     ld l, a
     ld a, (hl)
     add a, c
@@ -355,19 +336,19 @@ remain5:
 ; ----------------------------------
  ; bit 4 - top row, mid/right
     ld a, d
-    or $38
+    and $38
     ld l, a
     ld c, (hl)
 ; bit 4 - middle row, mid/right
     ld a, e
-    or $28
+    and $28
     ld l, a
     ld a, (hl)
     add a, c
     ld c, a
 ; bit 4 - bottom row, mid/right
     ld a, b
-    or $38
+    and $38
     ld l, a
     ld a, (hl)
     add a, c
@@ -379,7 +360,7 @@ remain5:
     jr z, remain4
 ;dead
     ex af, af'
-    or $ef              ; res 4, a
+    and $ef              ; res 4, a
     jp skip4
 alive4:
     or $10              ; set 4, a
@@ -390,19 +371,19 @@ remain4:
 ; ----------------------------------
  ; bit 3 - top row, mid/right
     ld a, d
-    or $1c
+    and $1c
     ld l, a
     ld c, (hl)
 ; bit 3 - middle row, mid/right
     ld a, e
-    or $14
+    and $14
     ld l, a
     ld a, (hl)
     add a, c
     ld c, a
 ; bit 3 - bottom row, mid/right
     ld a, b
-    or $1c
+    and $1c
     ld l, a
     ld a, (hl)
     add a, c
@@ -425,19 +406,19 @@ remain3:
 ; ----------------------------------
  ; bit 2 - top row, mid/right
     ld a, d
-    or $0e
+    and $0e
     ld l, a
     ld c, (hl)
 ; bit 2 - middle row, mid/right
     ld a, e
-    or $0a
+    and $0a
     ld l, a
     ld a, (hl)
     add a, c
     ld c, a
 ; bit 2 - bottom row, mid/right
     ld a, b
-    or $0e
+    and $0e
     ld l, a
     ld a, (hl)
     add a, c
@@ -460,19 +441,19 @@ remain2:
 ; ----------------------------------
  ; bit 1 - top row, mid/right
     ld a, d     ; 4
-    or 7        ; 7
+    and 7        ; 7
     ld l, a     ; 4
     ld c, (hl)  ; 7=22
 ; bit 1 - middle row, mid/right
     ld a, e     ; 4
-    or 5        ; 7
+    and 5        ; 7
     ld l, a     ; 4
     ld a, (hl)  ; 7
     add a, c    ; 4
     ld c, a     ; 4=30
 ; bit 1 - bottom row, mid/right
     ld a, b     ; 4
-    or 7        ; 7
+    and 7        ; 7
     ld l, a     ; 4
     ld a, (hl) ; 7
     add a, c    ; 4=26
@@ -533,19 +514,19 @@ resume_end_of_line:
     exx ; use old ones
  ; bit 0&1 - top row
     ld a, d
-    or $03
+    and $03
     ld l, a
     ld c, (hl)
 ; bit 1 - middle row
     ld a, e
-    or $02      ; not own bit
+    and $02      ; not own bit
     ld l, a
     ld a, (hl)
     add a, c
     ld c, a
 ; bit 0&1 - bottom row
     ld a, b
-    or $03
+    and $03
     ld l, a
     ld a, (hl)
     add a, c
@@ -555,21 +536,21 @@ resume_end_of_line:
 
  ; bit 7 - top row
     ld a, d
-    or $80
+    and $80
     ld l, a
     ld a, (hl)
     add a, c
     ld c, a
 ; bit 7 - middle row
     ld a, e
-    or $80
+    and $80
     ld l, a
     ld a, (hl)
     add a, c
     ld c, a
 ; bit 7 - bottom row
     ld a, b
-    or $80
+    and $80
     ld l, a
     ld a, (hl)
     add a, c
