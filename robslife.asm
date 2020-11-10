@@ -145,13 +145,13 @@ line_loop:
     inc hl      ; 6=61
     push hl     ; 11=72
 
-    ld h, d
+    ld h, a     ; mode to h on its way to d
     ld a, (de)  ; 7=79    ; middLe row = e
     inc de      ; 6=85
     push de     ; 11=96  ; de short for destination? :-)
 
-    ld d, h         ; 4=100 move to top row
-    ld a, e
+    ld d, h         ; 4=100 move to top row = d
+    ld e, a         ; move to e
 
 ; make sure the bit count table is read for the HL index.
     ld h, bit_count_table/256
@@ -211,37 +211,37 @@ column_loop:
 ; deal with remainders from last column
 ; bit 7 - top row, left
     ld a, d
-    or 1                ; literally the count!
+    and 1                ; literally the count!
     ld c, a
 ; bit 7 - middle row, left
     ld a, e
-    or 1
+    and 1
     add a, c
     ld c, a
 ; bit 7 - bottom row, left
     ld a, b
-    or 1
+    and 1
     add a, c            ; we have count for left neighbours now
 ; hl and bc are now free.
     exx
     ld c, a
  ; bit 7 - top row, mid/right
     ld a, d
-    or $c0
+    and $c0
     ld l, a
     ld a, (hl)
     add a, c
     ld c, a
 ; bit 7 - middle row, mid/right
     ld a, e
-    or $40
+    and $40
     ld l, a
     ld a, (hl)
     add a, c
     ld c, a
 ; bit 7 - bottom row, mid/right
     ld a, b
-    or $c0
+    and $c0
     ld l, a
     ld a, (hl)
     add a, c
@@ -617,7 +617,7 @@ skip_end_of_row:
     jp resume_end_of_line
 
     .db 0
-    .dm "Fast Spectrum Life (c) 2020 Rob Probin"
+    dm "Fast Spectrum Life (c) 2020 Rob Probin"
     .db 0
 
 fast_ldir8:
