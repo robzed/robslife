@@ -1,0 +1,7 @@
+*.rom
+*.lst
+old/
+.DS_Store
+*.swp
+
+
