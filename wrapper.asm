@@ -21,7 +21,9 @@ tCODE       equ     $AF             ; token CODE
 tPRINT      equ     $F5             ; token PRINT
 tRANDOMIZE  equ     $F9             ; token RANDOMIZE
 tUSR        equ     $C0             ; token USR
-
+tPLOT       equ     $F6
+tCOLON      equ     $3A
+tCOMMA      equ     $2C
 
 pixels_start    equ 0x4000      ; ZXSP screen pixels
 attr_start      equ 0x5800      ; ZXSP screen attributes
@@ -63,13 +65,40 @@ end10:  defb    $0d                     ; line end marker
         defm    "55555",$0e000003d900   ; number 55555, ascii & internal format
 end20:  defb    $0d                     ; line end marker
 
-; 30 RANDOMIZE USR 55555
+; 30 plot 2, 175: plot 2,174; plot 2, 173: plot 0, 174, plot 1,173
         defb    0,30                    ; line number
         defb    end30-($+1)             ; line length
         defb    0                       ; statement number
+        defb    tPLOT
+        defm    "2",   $0e0000020000
+        defm    ",175",$0e0000af0000
+        defb    tCOLON
+        defb    tPLOT
+        defm    "2",   $0e0000020000
+        defm    ",174",$0e0000ae0000
+        defb    tCOLON
+        defb    tPLOT
+        defm    "2",   $0e0000020000
+        defm    ",173",$0e0000ad0000
+        defb    tCOLON
+        defb    tPLOT
+        defm    "0",   $0e0000000000
+        defm    ",174",$0e0000ae0000
+        defb    tCOLON
+        defb    tPLOT
+        defm    "1",   $0e0000010000
+        defm    ",173",$0e0000ad0000
+
+end30:  defb    $0d                     ; line end marker
+
+
+; 40 RANDOMIZE USR 55555
+        defb    0,40                    ; line number
+        defb    end40-($+1)             ; line length
+        defb    0                       ; statement number
         defb    tRANDOMIZE,tUSR         ; token RANDOMIZE, token USR
         defm    "55555",$0e000003d900   ; number 55555, ascii & internal format
-end30:  defb    $0d                     ; line end marker
+end40:  defb    $0d                     ; line end marker
 
 program_end:
 
@@ -77,8 +106,7 @@ program_end:
 
 variables_end:
 
-
-
+; 
 ; ---------------------------------------------------
 ;       a machine code block:
 ; ---------------------------------------------------
