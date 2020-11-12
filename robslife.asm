@@ -73,8 +73,8 @@ main:
     
 ;    ld a, (current_line_count)
 ;<<< fix this
-    ld bc,$1800/32
-    call fast_ldir32
+    ld bc,$1800
+    call fast_ldir_aligned32
 
 ;    ex hl,de
 ;    call clear32_aligned4
@@ -149,6 +149,7 @@ line_loop:
 
     ld d, h         ; 4=100 move to top row = d
     ld e, a         ; move to e
+    ex af,af'       ; store middle as well
 
 ; make sure the bit count table is read for the HL index.
     ld h, bit_count_table/256
@@ -242,7 +243,6 @@ column_loop:
     ld l, a
     ld a, (hl)
     add a, c
-    ld c, a
 
 ; A contains the count of bits
     cp 3
@@ -250,11 +250,11 @@ column_loop:
     cp 2
     jr z, remain7
 ;dead
-;    ex af, af'         ; redundant
-    xor a
+    ex af, af'
+    and $7f 
     jp skip7
 alive7:
-    ld a, $1
+    or $80
 skip7:
     ex af, af'
 remain7:
@@ -503,7 +503,7 @@ remain1:
     ld d, h         ; move to top row
     ld e, a
 
-    ; restore d
+    ; restore h
     ld h, bit_count_table/256
 
 resume_end_of_line:
@@ -567,15 +567,22 @@ skip0:
     ex af, af'
 remain0:
 
-; swap to obsolete registers
+; get middle row for this new byte
+    ld a, e     ; will become a' in a minute
+; swap to what is will become previous byte
     exx
+
 ; write back the data to the screen 
     pop hl      ; middle row always in middle of stack
     push hl
     dec hl      ; it was pre-incremented
     res 7, h
     ex af, af'
-    ld (hl), a
+    ld (hl), a  ; write pixel changes back
+
+    ; restore h
+    ld h, bit_count_table/256
+
     ld a,(line_byte_count)
     dec a
     jp nz, column_loop
@@ -626,7 +633,7 @@ loopldi:    ;you can use this entry for a call
  jp pe, loopldi    ; jp used as it is faster and in the case of a loop unrolling we assume speed matters more than size
  ret ; if this is a subroutine and use the unrolled ldi's with a call.
 
-fast_ldir32:
+fast_ldir_aligned32:
 ; Unrolled : (32 * size + 10) / n = (32*16 + 10) / 32 = ~16.3 T-states per byte copied when unrolled 32 times
  ldi
  ldi
@@ -663,7 +670,7 @@ fast_ldir32:
  ldi
  ldi
  ldi
- jp pe, fast_ldir32
+ jp pe, fast_ldir_aligned32
  ret
 
 
