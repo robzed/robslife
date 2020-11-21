@@ -1,4 +1,5 @@
 Rob's Life
+==========
 
 Faster pixel-based Conway's game of life.
 For the Sinclair ZX Spectrum.
@@ -8,7 +9,7 @@ This life writes back to the screen as it's processing - which means we do most
 reading and writing from upper RAM.
 
 BACKGROUND
-==========
+----------
 
 There are a whole bunch of implemnentations of Conway's Game of Life for the 
 Sinclair ZX Spectrum. For details on Conways Game of Life see 
@@ -24,7 +25,7 @@ So that got me thinking - surely we can do it faster.
 
 
 ALTERING THE AMOUNT OF SCREEN PROCESSED
-=======================================
+---------------------------------------
 
 POKE 55556, number-of-lines
 POKE 55558, start-line.
@@ -33,9 +34,16 @@ Start-line is 0 to 191.
 Number of lines is 1 to 192.
 Start-line plus number-of-lines should *never* be more than 192.
 
+IMPORTANT FILES
+---------------
+
+tape_wrapper.tap - you can load this into ZX Spectrum emulator
+robslife.asm - this contains the actual core Life program in Z80 Assembler.
+tape_wrapper.asm - make a single test BASIC program with a glider.
+
 
 MACHINE CODE
-============
+------------
 
 Normally loaded at 55555.
 
@@ -51,7 +59,7 @@ There is a small amount of space above the code, but not much.
 
 
 Simple example program 
-======================
+----------------------
 
 10 CLEAR 490000
 20 LOAD "" CODE 55555
@@ -61,7 +69,7 @@ Simple example program
 
 
 EXISTING IMPLEMENTATIONS
-========================
+------------------------
 
 I disassembled the machine code of both of the MAcro-Life (1996) and Life (1988).
 
@@ -92,8 +100,9 @@ https://spectrumcomputing.co.uk/entry/25833/ZX-Spectrum/Macro-Life
 https://spectrumcomputing.co.uk/entry/14096/ZX-Spectrum/Outlet_issue_009
 https://spectrumcomputing.co.uk/entry/21938/ZX-Spectrum/Life
 
+
 PROCESSING REQUIRED
-===================
+-------------------
 
 For a start you need copy the screen either before or afterwards. Because you 
 can't accurately calculate each pixel to the rules if pixels are changing around
@@ -112,7 +121,7 @@ All instructions takes at least 4 cycles, and mostly more.
 
 
 OPTIMISATION APPROACH - SCREEN COPY
-===================================
+-----------------------------------
 
 For a start the screen copy uses LDIR - as most people do. This takes 21 cycles 
 per loop, 
@@ -125,7 +134,7 @@ Theoretically it's possible to get
 
 
 OPTIMISATION APPROACH - LIFE PIXEL PROCESSING
-=============================================
+---------------------------------------------
 
 Secondly, rather than deal with each neighbour at a time, perhaps we can count
 multiple pixels above, current and below lines. We can then step along the 
@@ -134,8 +143,9 @@ byte of 8 pixels.
 We take this approach - but the code is much longer. We try to keep the pixel 
 data in registers, and the pointers/address of the pixel data on the stack.
 
+
 FUTURE OPTIMISATIONS
-====================
+--------------------
 
 Because of the Spectrum screen layout, the current code copies the entire screen 
 even if only part of the screen is being processed. This could be fixed, athough
@@ -146,7 +156,7 @@ neighbours are blank. The trade off might be worth it?
 
 
 THANKS TO
-=========
+---------
 
 Henk de Groot - for getting me looking at this - after he posted about a 
 video about a computer written in Life. Life is Turing complete(!)
