@@ -37,10 +37,11 @@ Start-line plus number-of-lines should *never* be more than 192.
 IMPORTANT FILES
 ---------------
 
-tape_wrapper.tap - you can load this into ZX Spectrum emulator
-robslife.asm - this contains the actual core Life program in Z80 Assembler.
-tape_wrapper.asm - make a single test BASIC program with a glider.
+* tape_wrapper.tap - you can load this into ZX Spectrum emulator
+* robslife.asm - this contains the actual core Life program in Z80 Assembler.
+* tape_wrapper.asm - make a single test BASIC program with a glider.
 
+With tape_wrapper.tap type 'GO TO 40' to step the next frame.
 
 MACHINE CODE
 ------------
@@ -61,10 +62,10 @@ There is a small amount of space above the code, but not much.
 Simple example program 
 ----------------------
 
-10 CLEAR 490000
-20 LOAD "" CODE 55555
-30 PLOT 2,175: PLOT 2,174: PLOT 2,173: PLOT 0,174: PLOT 1,173
-40 RANDOMIZE USR 55555
+    10 CLEAR 490000
+    20 LOAD "" CODE 55555
+    30 PLOT 2,175: PLOT 2,174: PLOT 2,173: PLOT 0,174: PLOT 1,173
+    40 RANDOMIZE USR 55555
 
 
 
