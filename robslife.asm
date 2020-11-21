@@ -503,8 +503,8 @@ remain1:
 
     ld h, a         ; shift top row to h
 
-    ld a, (de)      ; middle row = e
     inc de
+    ld a, (de)      ; middle row = e
     push de
 
     ld d, h         ; move to top row
