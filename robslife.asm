@@ -254,6 +254,7 @@ column_loop:
     and $7f 
     jp skip7
 alive7:
+    ex af, af'
     or $80
 skip7:
     ex af, af'
@@ -290,6 +291,7 @@ remain7:
     and $bf     ; res 6, a
     jp skip6
 alive6:
+    ex af, af'
     or $40     ; set 6, a
 skip6:
     ex af, af'
@@ -325,6 +327,7 @@ remain6:
     and $df             ; res 5, a
     jp skip5
 alive5:
+    ex af, af'
     or $20              ; set 5, a
 skip5:
     ex af, af'
@@ -360,6 +363,7 @@ remain5:
     and $ef              ; res 4, a
     jp skip4
 alive4:
+    ex af, af'
     or $10              ; set 4, a
 skip4:
     ex af, af'
@@ -395,6 +399,7 @@ remain4:
     and $f7     ; res 3, a
     jp skip3
 alive3:
+    ex af, af'
     or $8       ; set 3, a
 skip3:
     ex af, af'
@@ -430,6 +435,7 @@ remain3:
     and $fb             ;res 2, a
     jp skip2
 alive2:
+    ex af, af'
     or 4                ; set 2, a
 skip2:
     ex af, af'
@@ -466,6 +472,7 @@ remain2:
     and $fd     ; res 1, a
     jp skip1
 alive1:
+    ex af, af'
     or 2       ; set 1, a
 skip1:
     ex af, af'
@@ -486,12 +493,12 @@ remain1:
     pop hl          ; bottom
     pop bc          ; top
 
-    ld a, (bc)      ; top row, should be d but put it temporarily in a
     inc bc
+    ld a, (bc)      ; top row, should be d but put it temporarily in a
     push bc
 
-    ld b, (hl)      ; bottom row = b
     inc hl
+    ld b, (hl)      ; bottom row = b
     push hl
 
     ld h, a         ; shift top row to h
@@ -562,6 +569,7 @@ resume_end_of_line:
     and $fe
     jp skip0
 alive0:
+    ex af, af'
     or 1
 skip0:
     ex af, af'
