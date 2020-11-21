@@ -1,4 +1,6 @@
 ; ZX Spectrum Full screen Life
+; Rob Probin, Novermber 2020
+; GPL v3 License
 ;
 ; My attempt at beating Macro-Life by Toni Baker (10.5 seconds full screen)
 ; and Outlet Life by Paul Hiley (3.5 seconds 2/3 screen)
@@ -478,6 +480,16 @@ skip1:
     ex af, af'
 remain1:
 
+; TEST CODE - stop at a particular position
+;    ld a, (current_line_count)
+;    cp 192-2
+;    jp nz, skip_test
+;    ld a, (line_byte_count)
+;    cp 32
+;    jp nz, skip_test
+;    and a              ; set breakpoint here
+;skip_test:
+; END TEST CODE
 
 ; swap current to old (B, HL -> B' HL')
 ;  C, E, E' and C' are empty at this point, 
