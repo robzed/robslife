@@ -8,6 +8,10 @@ Written by Rob Probin, November 2020.
 This life writes back to the screen as it's processing - which means we do most 
 reading and writing from upper RAM.
 
+This version takes about 2.7 seconds for a full screen, which is faster than 
+the two others I'm aware of. It's also easy to reduce the amount of screen is processed.
+
+
 BACKGROUND
 ----------
 
@@ -34,6 +38,7 @@ Start-line is 0 to 191.
 Number of lines is 1 to 192.
 Start-line plus number-of-lines should *never* be more than 192.
 
+
 IMPORTANT FILES
 ---------------
 
@@ -41,7 +46,10 @@ IMPORTANT FILES
 * robslife.asm - this contains the actual core Life program in Z80 Assembler.
 * tape_wrapper.asm - make a single test BASIC program with a glider.
 
-With tape_wrapper.tap type 'GO TO 40' to step the next frame.
+With tape_wrapper.tap type 'GO TO 40' to step the next frame. It contains a glider 
+and some text (from the code load) which is processed. If you want just the glider, 
+type CLS then GO TO 30.
+
 
 MACHINE CODE
 ------------
@@ -54,7 +62,7 @@ Execute address 55555
 Screen copy: 49152 (although there is a 32 byte blank line buffer below this!)
 
 CLEAR 49000
-    actually could be CLEAR 49152 - 32 maximum minimum
+    (actually could be CLEAR 49152 - 32 maximum address)
 
 There is a small amount of space above the code, but not much.
 
@@ -66,7 +74,6 @@ Simple example program
     20 LOAD "" CODE 55555
     30 PLOT 2,175: PLOT 2,174: PLOT 2,173: PLOT 0,174: PLOT 1,173
     40 RANDOMIZE USR 55555
-
 
 
 EXISTING IMPLEMENTATIONS
